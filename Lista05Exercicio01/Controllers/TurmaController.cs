@@ -42,7 +42,7 @@ namespace Lista05Exercicio01.Controllers
                 Console.WriteLine("\n CADASTRO NÃO REALIZADO!");
                 Console.WriteLine("\nCÓDIGO DO ERRO: " + e.Number);
 
-                if (e.Number ==8152)
+                if (e.Number == 8152)
                 {
                     Console.WriteLine("\n LIMITE DE CARACTERES EXCEDIDO.");
                 }
@@ -54,7 +54,7 @@ namespace Lista05Exercicio01.Controllers
 
             }
 
-            
+
 
         }
         public void AtualizarTurma()
@@ -63,7 +63,7 @@ namespace Lista05Exercicio01.Controllers
             {
                 Console.WriteLine("\n ATUALIZAR TURMA");
 
-               
+
 
                 Console.WriteLine("\n Por favor, informe o ID da turma");
                 var idTurma = Guid.Parse(Console.ReadLine());
@@ -84,42 +84,96 @@ namespace Lista05Exercicio01.Controllers
                     Console.WriteLine("\nPor favor, Informe a data do fim da turma");
                     turma.DataFim = DateTime.Parse(Console.ReadLine());
 
-                    turmaRepository.Change(turma);
+                    turmaRepository.Alterar(turma);
+
+                    Console.WriteLine("\nTURMA ATUALIZADA COM SUCESSO!");
                 }
-
-                
-
-
-                var turmaRepository = new TurmaRepository();
-
-
-                turmaRepository.ConnectionString = connectionString;
-                turmaRepository.Inserir(turma);
-
-                Console.WriteLine("\n TURMA CADASTRADA COM SUCESSO!");
-            }
-            catch (SqlException e)
-            {
-                Console.WriteLine("\n CADASTRO NÃO REALIZADO!");
-                Console.WriteLine("\nCÓDIGO DO ERRO: " + e.Number);
-
-                if (e.Number == 8152)
+                else
                 {
-                    Console.WriteLine("\n LIMITE DE CARACTERES EXCEDIDO.");
+                    Console.WriteLine("\nTURMA NÃO ENCINTRADA. POR FAVOR, TENTE NOVAMENTE.");
+
                 }
 
+
             }
+
             catch (Exception e)
             {
-                Console.WriteLine("\nERRO: " + e.Message);
+               
+           
+                    Console.WriteLine("\nErro: " + e.Message);
+            
 
             }
+
+
 
 
 
         }
 
+        public void ExcluirTurma()
+        {
+            try
+            {
+                Console.WriteLine("\nEXCLUSÃO DE TURMA\n");
+
+                Console.Write("Informe o ID da turma: ");
+                var idTurma = Guid.Parse(Console.ReadLine());
+
+                
+                var turmaRepository = new TurmaRepository();
+                turmaRepository.ConnectionString = connectionString;
+
+               
+                var turma = turmaRepository.ObterPorId(idTurma);
+
+                
+                if (turma != null)
+                {
+                    
+                    turmaRepository.Excluir(turma);
+
+                    Console.WriteLine("\nTurma excluída com sucesso!.");
+                }
+                else
+                {
+                    Console.WriteLine("\nTurma não encontrada. Por favor, tente novamente.");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\nErro: " + e.Message);
+            }
+        }
+
+        public void ConsultarTurmas()
+        {
+            try
+            {
+                var turmaRepository = new TurmaRepository();
+                turmaRepository.ConnectionString = connectionString;
+
+                var turmas = turmaRepository.ObterTodos();
+
+                foreach (var item in turmas)
+                {
+                    Console.Write("\n Id da turma .......................: " + item.IdTurma);
+                    Console.Write("\n Nome da turma .....................: " + item.Nome);
+                    Console.Write("\n Data de início da turma ...........: " + item.DataInicio);
+                    Console.WriteLine("\n Data do fim da turma ............ " + item.DataFim);
+                    
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\n Erro: " + e.Message);
+
+            }
+        }
+
     }
-    
+
 
 }
